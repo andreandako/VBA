@@ -1,0 +1,145 @@
+Public Type BrowseInfo
+    hOwner As Long
+    pIDLRoot As Long
+    pszDisplayName As String
+    lpszTitle As String
+    ulFlags As Long
+    lpfn As Long
+    lParam As Long
+    iImage As Long
+End Type
+
+ 
+Sub Trazer_planilhas()
+
+'De Yudi para usuário: colocar o caminho da pasta, onde estarão os arquivos a serem consolidados'
+Folder = "z:\Manutenção de conta\Fechamento\Bancos_Planilhas\"
+
+'Entre parenteses colocar o n° da aba onde serão consolidados as planilhas'
+Set DestSht = ThisWorkbook.Sheets(2)
+First = True
+FName = Dir(Folder & "*.xls*")
+Do While FName <> ""
+   Set bk = Workbooks.Open(FileName:=Folder & FName, ReadOnly:=True)
+   For Each sht In bk.Sheets
+      If First = True Then
+         sht.Cells.Copy _
+            Destination:=DestSht.Cells
+         First = False
+      Else
+         SourceLastRow = sht.Range("A" & Rows.Count).End(xlUp).Row
+         DestLastRow = DestSht.Range("A" & Rows.Count).End(xlUp).Row
+         DestNewRow = DestLastRow + 1
+         sht.Rows("2:" & SourceLastRow).Copy _
+            Destination:=DestSht.Rows(DestNewRow)
+            
+      End If
+   
+   Next sht
+   
+   bk.Close savechanges:=False
+   FName = Dir()
+Loop
+
+'Yudi para USUÁRIO Essa tabela é para copiar geral na Van'
+Sheets("VAN").Range("D12:D6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("K2:K6000").Value
+Sheets("VAN").Range("E12:E6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("J2:J6000").Value
+Sheets("VAN").Range("F12:F6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("D2:D6000").Value
+Sheets("VAN").Range("G12:G6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("L2:L6000").Value
+
+
+'Yudi para USUÁRIO Essa tabela é para copiar geral na DDA'
+Sheets("PAGTO").Range("D12:D6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("K2:K6000").Value
+Sheets("PAGTO").Range("E12:E6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("J2:J6000").Value
+Sheets("PAGTO").Range("F12:F6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("D2:D6000").Value
+Sheets("PAGTO").Range("G12:G6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("L2:L6000").Value
+
+'Yudi para USUÁRIO Essa tabela é para copiar geral na DI'
+Sheets("DI").Range("D12:D6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("K2:K6000").Value
+Sheets("DI").Range("E12:E6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("J2:J6000").Value
+Sheets("DI").Range("F12:F6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("D2:D6000").Value
+Sheets("DI").Range("G12:G6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("L2:L6000").Value
+
+'Yudi para USUÁRIO Essa tabela é para copiar geral na DDA'
+Sheets("DDA").Range("D12:D6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("K2:K6000").Value
+Sheets("DDA").Range("E12:E6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("J2:J6000").Value
+Sheets("DDA").Range("F12:F6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("D2:D6000").Value
+Sheets("DDA").Range("G12:G6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("L2:L6000").Value
+
+'Recorta as colunas H:I e as cola em J:K
+Sheets("VAN").Activate
+Columns("H:I").Select
+Selection.Copy
+Columns("J:K").Select
+Selection.Insert Shift:=xlToRight
+
+'Yudi para usuário: estas duas linhas copiam as colunas W e B da aba Geral.
+Sheets("VAN").Range("H12:H6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("X2:X6000").Value
+Sheets("VAN").Range("I12:I6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("B2:B6000").Value
+
+ActiveCell.FormulaR1C1 = "=NOW()"
+Range("H1").Select
+    Selection.Copy
+    Range("H2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+'Para Convenio de Pagamento: Recorta as colunas H:H e as cola em I:I
+Sheets("PAGTO").Activate
+Columns("H:H").Select
+Selection.Copy
+Columns("I:I").Select
+Selection.Insert Shift:=xlToRight
+Sheets("PAGTO").Range("H12:H6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("Z2:Z6000").Value
+
+ActiveCell.FormulaR1C1 = "=NOW()"
+Range("H1").Select
+    Selection.Copy
+    Range("H2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+
+'Para produto DDA: Recorta as colunas AJ:AJ e as cola em I:I
+Sheets("DDA").Activate
+Columns("H:H").Select
+Selection.Copy
+Columns("I:I").Select
+Selection.Insert Shift:=xlToRight
+Sheets("DDA").Range("H12:H6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("AH2:AH6000").Value
+
+ActiveCell.FormulaR1C1 = "=NOW()"
+Range("H1").Select
+    Selection.Copy
+    Range("H2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+
+'Para produto DI: Recorta as colunas AJ:AJ e as cola em I:I
+Sheets("DI").Activate
+Columns("H:H").Select
+Selection.Copy
+Columns("I:I").Select
+Selection.Insert Shift:=xlToRight
+Sheets("DI").Range("H12:H6012").Value = Sheets("BASE_CONTAS ATIVAS").Range("AJ2:AJ6000").Value
+
+ActiveCell.FormulaR1C1 = "=NOW()"
+Range("H1").Select
+    Selection.Copy
+    Range("H2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+
+    
+End Sub
+
+
+
+
+
+
